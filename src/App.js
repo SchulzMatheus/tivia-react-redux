@@ -11,13 +11,19 @@ class App extends Component {
     return (
       <div className="App">
         <Switch>
-          <Route exact path="/" render={
+          <Route
+            exact
+            path="/"
+            render={
               (props) => (<Login
                 { ...props }
               />)
             }
           />
-          <Route exact path="/game" render={
+          <Route
+            exact
+            path="/game"
+            render={
               (props) => (<Game
                 { ...props }
               />)
@@ -28,5 +34,6 @@ class App extends Component {
       </div>
     );
   }
+}
 
 export default connect()(App);
