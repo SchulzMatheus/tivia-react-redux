@@ -1,19 +1,38 @@
-import React from 'react';
-import logo from './trivia.png';
+import React, { Component } from 'react';
 import './App.css';
-import Login from './pages/Login';
+import { Switch, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-export default function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={ logo } className="App-logo" alt="logo" />
-      </header>
-      <main>
-        <section>
-          <Login />
-        </section>
-      </main>
-    </div>
-  );
+import Login from './pages/Login';
+import Game from './pages/Game';
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={
+              (props) => (<Login
+                { ...props }
+              />)
+            }
+          />
+          <Route
+            exact
+            path="/game"
+            render={
+              (props) => (<Game
+                { ...props }
+              />)
+            }
+          />
+        </Switch>
+      </div>
+    );
+  }
 }
+
+export default connect()(App);

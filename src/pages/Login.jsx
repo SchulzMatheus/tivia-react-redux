@@ -1,4 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
+import logo from '../trivia.png';
+
+import { fetchTokenPlayer } from '../redux/actions';
 
 class Login extends Component {
   state = {
@@ -24,45 +30,68 @@ class Login extends Component {
     return loginValidation;
   };
 
+  handleClick = async (event) => {
+    event.preventDefault();
+    const { dispatch, history } = this.props;
+    await dispatch(fetchTokenPlayer());
+    const { token } = this.props;
+    localStorage.setItem('token', token);
+    history.push('/game');
+  };
+
   render() {
     const { inputName, inputEmail, btnDisabled } = this.state;
     const { handleChange, handleClick } = this;
 
     return (
       <div>
-        <label htmlFor="inputName">
-          Nome:
-          <input
-            id="inputName"
-            name="inputName"
-            type="text"
-            data-testid="input-player-name"
-            onChange={ handleChange }
-            value={ inputName }
-          />
-        </label>
-        <label htmlFor="inputEmail">
-          Email:
-          <input
-            id="inputEmail"
-            name="inputEmail"
-            type="text"
-            data-testid="input-gravatar-email"
-            onChange={ handleChange }
-            value={ inputEmail }
-          />
-        </label>
-        <button
-          type="button"
-          data-testid="btn-play"
-          disabled={ btnDisabled }
-          onClick={ handleClick }
-        >
-          Play
-        </button>
+        <header className="App-header">
+          <img src={ logo } className="App-logo" alt="logo" />
+        </header>
+        <main>
+          <label htmlFor="inputName">
+            Nome:
+            <input
+              id="inputName"
+              name="inputName"
+              type="text"
+              data-testid="input-player-name"
+              onChange={ handleChange }
+              value={ inputName }
+            />
+          </label>
+          <label htmlFor="inputEmail">
+            Email:
+            <input
+              id="inputEmail"
+              name="inputEmail"
+              type="text"
+              data-testid="input-gravatar-email"
+              onChange={ handleChange }
+              value={ inputEmail }
+            />
+          </label>
+          <button
+            type="button"
+            data-testid="btn-play"
+            disabled={ btnDisabled }
+            onClick={ handleClick }
+          >
+            Play
+          </button>
+        </main>
       </div>
     );
   }
 }
 
-export default Login;
+Login.propTypes = {
+  dispatch: PropTypes.func,
+  history: PropTypes.func,
+}.isRequired;
+
+const mapStateToProps = (state) => ({
+  token: state.player.token,
+});
+
+export default connect(mapStateToProps)(Login);
