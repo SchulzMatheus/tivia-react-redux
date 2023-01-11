@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
 import logo from '../trivia.png';
-
 import { fetchTokenPlayer } from '../redux/actions';
+import { Link } from 'react-router-dom';
 
 class Login extends Component {
   state = {
@@ -79,6 +78,14 @@ class Login extends Component {
           >
             Play
           </button>
+          <Link to="/config">
+            <button
+              type="button"
+              data-testid="btn-settings"
+            >
+              Config
+            </button>
+          </Link>
         </main>
       </div>
     );
