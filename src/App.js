@@ -1,8 +1,8 @@
 import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 import logo from './trivia.png';
 import './App.css';
 import Login from './pages/Login';
-import { Route, Switch } from 'react-router-dom'
 import Config from './pages/Config';
 
 export default function App() {
@@ -12,12 +12,12 @@ export default function App() {
         <img src={ logo } className="App-logo" alt="logo" />
       </header>
       <main>
-      <div>
-      <Switch>
-        <Route exact path="/" component={ Login } />
-        <Route path="/config" component={ Config } />
-      </Switch>
-    </div>
+        <div>
+          <Switch>
+            <Route exact path="/" component={ Login } />
+            <Route path="/config" component={ Config } />
+          </Switch>
+        </div>
       </main>
     </div>
   );
