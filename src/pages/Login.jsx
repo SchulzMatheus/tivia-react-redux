@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import logo from '../trivia.png';
 import { fetchTokenPlayer } from '../redux/actions';
-import { Link } from 'react-router-dom';
 
 class Login extends Component {
   state = {
