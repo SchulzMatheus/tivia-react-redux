@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { fetchTokenPlayer } from '../redux/actions';
 import '../styles/login.css';
 
@@ -10,6 +10,7 @@ class Login extends Component {
     inputName: '',
     inputEmail: '',
     btnDisabled: true,
+    newPage: false,
   };
 
   handleChange = ({ target }) => {
@@ -30,18 +31,20 @@ class Login extends Component {
   };
 
   handleClick = async () => {
-    const { dispatch, history } = this.props;
+    const { dispatch } = this.props;
 
     await dispatch(fetchTokenPlayer());
     const { token } = this.props;
     localStorage.setItem('token', token);
 
-    history.push('/game');
+    this.setState({ newPage: true });
   };
 
   render() {
-    const { inputName, inputEmail, btnDisabled } = this.state;
+    const { inputName, inputEmail, btnDisabled, newPage } = this.state;
     const { handleChange, handleClick } = this;
+
+    if (newPage) return <Redirect to="/game" />;
 
     return (
       <div className="login-container">
