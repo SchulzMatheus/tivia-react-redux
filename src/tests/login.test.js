@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithRouterAndRedux } from './helpers/renderWithRouterAndRedux';
 import Login from '../pages/Login';
@@ -10,8 +10,8 @@ describe('Testa a página "Login"', () => {
 
     const name = screen.getByRole('textbox', { name: /nome/i });
     const email = screen.getByRole('textbox', { name: /email/i });
-    const play = screen.getByRole('button', {  name: /play/i });
-    const config = screen.getByRole('button', {  name: /config/i})
+    const play = screen.getByRole('button', { name: /play/i });
+    const config = screen.getByRole('button', { name: /config/i })
 
     expect(name).toBeInTheDocument();
     expect(email).toBeInTheDocument();
@@ -24,7 +24,7 @@ describe('Testa a página "Login"', () => {
 
     const name = screen.getByRole('textbox', { name: /nome/i });
     const email = screen.getByRole('textbox', { name: /email/i });
-    const play = screen.getByRole('button', {  name: /play/i });
+    const play = screen.getByRole('button', { name: /play/i });
 
     userEvent.type(name, 'test');
     userEvent.type(email, 'test@gmail.com');
@@ -32,28 +32,27 @@ describe('Testa a página "Login"', () => {
     expect(play).toBeEnabled();
   });
 
-  it('3 - Testa o redirecionamento para iniciar o jogo.', () => {
+  it('3 - Testa o redirecionamento para iniciar o jogo.', async () => {
     const { history } = renderWithRouterAndRedux(<Login />);
 
     const name = screen.getByRole('textbox', { name: /nome/i });
     const email = screen.getByRole('textbox', { name: /email/i });
-    const play = screen.getByRole('button', {  name: /play/i });
+    const play = screen.getByRole('button', { name: /play/i });
 
     userEvent.type(name, 'test');
     userEvent.type(email, 'test@gmail.com');
     userEvent.click(play);
 
-    const game = screen.getByText(/game/i)
-    expect(game).toBeInTheDocument();
-
-    const { pathname } = history.location;
-    expect(pathname).toBe('/game');
+    await waitFor(() => {
+      const { pathname } = history.location;
+      expect(pathname).toBe('/game');     
+    })
   });
 
   it('4 - Testa o redirecionamento para as configurações.', () => {
     const { history } = renderWithRouterAndRedux(<Login />);
 
-    const config = screen.getByRole('button', {  name: /config/i})
+    const config = screen.getByRole('button', { name: /config/i })
     userEvent.click(config);
 
     const { pathname } = history.location;

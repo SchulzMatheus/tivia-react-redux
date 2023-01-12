@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { fetchTokenPlayer } from '../redux/actions';
 import '../styles/login.css';
 
-
 class Login extends Component {
   state = {
     inputName: '',
