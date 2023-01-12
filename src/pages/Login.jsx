@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import logo from '../trivia.png';
 import { fetchTokenPlayer } from '../redux/actions';
+import '../styles/login.css';
+
 
 class Login extends Component {
   state = {
@@ -21,20 +22,21 @@ class Login extends Component {
 
     const regEx = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
     const { inputName, inputEmail } = this.state;
-
     const loginValidation = regEx.test(inputEmail)
       && inputName.length > 0
       ? this.setState({ btnDisabled: false })
       : this.setState({ btnDisabled: true });
+
     return loginValidation;
   };
 
-  handleClick = async (event) => {
-    event.preventDefault();
+  handleClick = async () => {
     const { dispatch, history } = this.props;
+
     await dispatch(fetchTokenPlayer());
     const { token } = this.props;
     localStorage.setItem('token', token);
+
     history.push('/game');
   };
 
@@ -43,33 +45,32 @@ class Login extends Component {
     const { handleChange, handleClick } = this;
 
     return (
-      <div>
-        <header className="App-header">
-          <img src={ logo } className="App-logo" alt="logo" />
-        </header>
-        <main>
-          <label htmlFor="inputName">
-            Nome:
-            <input
-              id="inputName"
-              name="inputName"
-              type="text"
-              data-testid="input-player-name"
-              onChange={ handleChange }
-              value={ inputName }
-            />
-          </label>
-          <label htmlFor="inputEmail">
-            Email:
-            <input
-              id="inputEmail"
-              name="inputEmail"
-              type="text"
-              data-testid="input-gravatar-email"
-              onChange={ handleChange }
-              value={ inputEmail }
-            />
-          </label>
+      <div className="login-container">
+        <label className="label-input" htmlFor="inputName">
+          Nome
+          <input
+            id="inputName"
+            name="inputName"
+            type="text"
+            data-testid="input-player-name"
+            onChange={ handleChange }
+            value={ inputName }
+          />
+        </label>
+
+        <label className="label-input" htmlFor="inputEmail">
+          Email
+          <input
+            id="inputEmail"
+            name="inputEmail"
+            type="text"
+            data-testid="input-gravatar-email"
+            onChange={ handleChange }
+            value={ inputEmail }
+          />
+        </label>
+
+        <div className="play-config">
           <button
             type="button"
             data-testid="btn-play"
@@ -78,6 +79,7 @@ class Login extends Component {
           >
             Play
           </button>
+
           <Link to="/config">
             <button
               type="button"
@@ -86,7 +88,7 @@ class Login extends Component {
               Config
             </button>
           </Link>
-        </main>
+        </div>
       </div>
     );
   }
