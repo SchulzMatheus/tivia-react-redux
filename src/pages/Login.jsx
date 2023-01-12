@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { fetchTokenPlayer, savePlayerInfo } from '../redux/actions';
 import '../styles/login.css';
 
 import getToken from '../services/TriviaAPI/requestToken';
@@ -10,7 +11,8 @@ class Login extends Component {
   state = {
     inputName: '',
     inputEmail: '',
-    btnDisabled: false,
+    btnDisabled: true,
+    newPage: false,
   };
 
   handleChange = ({ target }) => {
@@ -32,21 +34,29 @@ class Login extends Component {
 
   handleClick = async () => {
     const responseCode = await getToken();
-    const { history } = this.props;
+    const { dispatch, history } = this.props;
     if (responseCode !== 0) {
       localStorage.removeItem('token');
       history.push('/');
     } else {
       history.push('/game');
     }
+
+    const { inputName, inputEmail } = this.state;
+
+    dispatch(savePlayerInfo({ inputName, inputEmail }));
+    await dispatch(fetchTokenPlayer());
+    this.setState({ newPage: true });
   };
 
   render() {
-    const { inputName, inputEmail, btnDisabled } = this.state;
+    const { inputName, inputEmail, btnDisabled, newPage } = this.state;
     const { handleChange, handleClick } = this;
 
+    if (newPage) return <Redirect to="/game" />;
+
     return (
-      <div className="login-container">
+      <main className="login-container">
         <label className="label-input" htmlFor="inputName">
           Nome
           <input
@@ -90,7 +100,7 @@ class Login extends Component {
             </button>
           </Link>
         </div>
-      </div>
+      </main>
     );
   }
 }

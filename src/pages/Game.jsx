@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import Header from '../components/Header';
 import getQuestions from '../services/TriviaAPI/requestQuestions';
 
 class Game extends Component {
@@ -50,31 +51,34 @@ class Game extends Component {
           ? 'Loading'
           : (
             <div>
-              <h2 data-testid="question-category">
-                { questions[currentQuestion]?.category }
-              </h2>
-              <h3 data-testid="question-text">
-                { questions[currentQuestion]?.question }
-              </h3>
-              <div data-testid="answer-options">
-                { this.handleRandom(
-                  questions[currentQuestion]?.correct_answer,
-                  questions[currentQuestion]?.incorrect_answers,
-                )
-                  .map((a, answerIndex) => (
-                    <button
-                      key={ answerIndex }
-                      type="button"
-                      data-testid={
-                        a === questions[currentQuestion]?.correct_answer
-                          ? 'correct-answer'
-                          : `wrong-answer-${answerIndex}`
-                      }
-                    >
-                      { a }
-                    </button>
-                  ))}
+              <Header />
+              <main>
+                <h2 data-testid="question-category">
+                  { questions[currentQuestion]?.category }
+                </h2>
+                <h3 data-testid="question-text">
+                  { questions[currentQuestion]?.question }
+                </h3>
+                <div data-testid="answer-options">
+                  { this.handleRandom(
+                    questions[currentQuestion]?.correct_answer,
+                    questions[currentQuestion]?.incorrect_answers,
+                  )
+                    .map((a, answerIndex) => (
+                      <button
+                        key={ answerIndex }
+                        type="button"
+                        data-testid={
+                          a === questions[currentQuestion]?.correct_answer
+                            ? 'correct-answer'
+                            : `wrong-answer-${answerIndex}`
+                        }
+                      >
+                        { a }
+                      </button>
+                    ))}
               </div>
+              </main>
             </div>
           )}
       </section>

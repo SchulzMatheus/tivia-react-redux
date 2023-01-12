@@ -1,4 +1,5 @@
 import {
+  SAVE_PLAYER_INFO,
   TOKEN_REQUEST_SUCCESSFUL,
 } from '../actions/actionTypes';
 
@@ -16,6 +17,12 @@ const player = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       token: action.payload.token,
+    };
+  case SAVE_PLAYER_INFO:
+    return {
+      ...state,
+      name: action.payload.inputName,
+      gravatarEmail: action.payload.inputEmail,
     };
   default:
     return state;
