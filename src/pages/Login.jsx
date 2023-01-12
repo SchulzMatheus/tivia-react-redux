@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { fetchTokenPlayer } from '../redux/actions';
 import '../styles/login.css';
+
+import getToken from '../services/TriviaAPI/requestToken';
 
 class Login extends Component {
   state = {
     inputName: '',
     inputEmail: '',
-    btnDisabled: true,
+    btnDisabled: false,
   };
 
   handleChange = ({ target }) => {
@@ -30,13 +31,14 @@ class Login extends Component {
   };
 
   handleClick = async () => {
-    const { dispatch, history } = this.props;
-
-    await dispatch(fetchTokenPlayer());
-    const { token } = this.props;
-    localStorage.setItem('token', token);
-
-    history.push('/game');
+    const responseCode = await getToken();
+    const { history } = this.props;
+    if (responseCode !== 0) {
+      localStorage.removeItem('token');
+      history.push('/');
+    } else {
+      history.push('/game');
+    }
   };
 
   render() {
