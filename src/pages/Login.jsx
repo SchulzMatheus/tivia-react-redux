@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
-import { fetchTokenPlayer } from '../redux/actions';
+import { fetchTokenPlayer, savePlayerInfo } from '../redux/actions';
 import '../styles/login.css';
 
 class Login extends Component {
@@ -32,8 +32,11 @@ class Login extends Component {
 
   handleClick = async () => {
     const { dispatch } = this.props;
+    const { inputName, inputEmail } = this.state;
 
+    dispatch(savePlayerInfo({ inputName, inputEmail }));
     await dispatch(fetchTokenPlayer());
+
     const { token } = this.props;
     localStorage.setItem('token', token);
 
@@ -47,7 +50,7 @@ class Login extends Component {
     if (newPage) return <Redirect to="/game" />;
 
     return (
-      <div className="login-container">
+      <main className="login-container">
         <label className="label-input" htmlFor="inputName">
           Nome
           <input
@@ -91,7 +94,7 @@ class Login extends Component {
             </button>
           </Link>
         </div>
-      </div>
+      </main>
     );
   }
 }
