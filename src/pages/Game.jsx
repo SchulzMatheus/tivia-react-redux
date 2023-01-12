@@ -77,7 +77,7 @@ class Game extends Component {
                         { a }
                       </button>
                     ))}
-              </div>
+                </div>
               </main>
             </div>
           )}
