@@ -5,6 +5,11 @@ import { connect } from 'react-redux';
 import Header from '../components/Header';
 import getQuestions from '../services/TriviaAPI/requestQuestions';
 
+import '../styles/game.css';
+
+const CORRECT_ANSWER = 'correct-answer';
+const WRONG_ANSWER = 'wrong-answer';
+
 class Game extends Component {
   state = {
     questions: [],
@@ -37,14 +42,24 @@ class Game extends Component {
     return randonAnswers;
   };
 
-  // nextQuestion = () => {
-  //   this.setState((prevState) => ({
-  //     currentQuestion: prevState.currentQuestion + 1,
-  //   }));
-  // };
+  handleResult = () => {
+    const allOptions = document.getElementById('answer-options');
+    const options = allOptions.childNodes;
+
+    options.forEach((option) => {
+      if (option.id === CORRECT_ANSWER) {
+        option.className = 'rigth';
+      } else {
+        option.className = 'wrong';
+      }
+    });
+  };
 
   render() {
-    const { questions, isLoading, currentQuestion } = this.state;
+    const {
+      questions, isLoading, currentQuestion,
+    } = this.state;
+
     return (
       <section>
         { isLoading
@@ -59,7 +74,7 @@ class Game extends Component {
                 <h3 data-testid="question-text">
                   { questions[currentQuestion]?.question }
                 </h3>
-                <div data-testid="answer-options">
+                <div id="answer-options" data-testid="answer-options">
                   { this.handleRandom(
                     questions[currentQuestion]?.correct_answer,
                     questions[currentQuestion]?.incorrect_answers,
@@ -68,10 +83,16 @@ class Game extends Component {
                       <button
                         key={ answerIndex }
                         type="button"
+                        id={
+                          a === questions[currentQuestion]?.correct_answer
+                            ? CORRECT_ANSWER
+                            : `${WRONG_ANSWER}-${answerIndex}`
+                        }
+                        onClick={ this.handleResult }
                         data-testid={
                           a === questions[currentQuestion]?.correct_answer
-                            ? 'correct-answer'
-                            : `wrong-answer-${answerIndex}`
+                            ? CORRECT_ANSWER
+                            : `${WRONG_ANSWER}-${answerIndex}`
                         }
                       >
                         { a }
