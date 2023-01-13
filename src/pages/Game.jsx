@@ -5,6 +5,11 @@ import { connect } from 'react-redux';
 import Header from '../components/Header';
 import getQuestions from '../services/TriviaAPI/requestQuestions';
 
+import '../styles/game.css';
+
+const CORRECT_ANSWER = 'correct-answer';
+const WRONG_ANSWER = 'wrong-answer';
+
 class Game extends Component {
   state = {
     questions: [],
@@ -67,9 +72,22 @@ class Game extends Component {
     return randonAnswers;
   };
 
+  handleResult = () => {
+    const allOptions = document.getElementById('answer-options');
+    const options = allOptions.childNodes;
+
+    options.forEach((option) => {
+      if (option.id === CORRECT_ANSWER) {
+        option.className = 'rigth';
+      } else {
+        option.className = 'wrong';
+      }
+    });
+  };
+
   render() {
-    const { questions, randomQuestions,
-      isLoading, currentQuestion, timeLeft, btnDisabled } = this.state;
+    const { questions, randomQuestions, isLoading,
+      currentQuestion, timeLeft, btnDisabled } = this.state;
 
     return (
       <section>
@@ -85,16 +103,22 @@ class Game extends Component {
                 <h3 data-testid="question-text">
                   { questions[currentQuestion]?.question }
                 </h3>
-                <div data-testid="answer-options">
+                <div id="answer-options" data-testid="answer-options">
                   { randomQuestions.map((a, answerIndex) => (
                     <button
                       key={ answerIndex }
                       type="button"
                       disabled={ btnDisabled }
+                      id={
+                        a === questions[currentQuestion]?.correct_answer
+                          ? CORRECT_ANSWER
+                          : `${WRONG_ANSWER}-${answerIndex}`
+                      }
+                      onClick={ this.handleResult }
                       data-testid={
                         a === questions[currentQuestion]?.correct_answer
-                          ? 'correct-answer'
-                          : `wrong-answer-${answerIndex}`
+                          ? CORRECT_ANSWER
+                          : `${WRONG_ANSWER}-${answerIndex}`
                       }
                     >
                       { a }
