@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
-import { fetchTokenPlayer, savePlayerInfo } from '../redux/actions';
+import { savePlayerInfo } from '../redux/actions';
 import '../styles/login.css';
 
 import getToken from '../services/TriviaAPI/requestToken';
@@ -12,7 +12,8 @@ class Login extends Component {
     inputName: '',
     inputEmail: '',
     btnDisabled: true,
-    newPage: false,
+    loginPage: false,
+    gamePage: false,
   };
 
   handleChange = ({ target }) => {
@@ -33,27 +34,26 @@ class Login extends Component {
   };
 
   handleClick = async () => {
+    const { dispatch } = this.props;
     const responseCode = await getToken();
-    const { dispatch, history } = this.props;
+
     if (responseCode !== 0) {
       localStorage.removeItem('token');
-      history.push('/');
+      this.setState({ loginPage: true });
     } else {
-      history.push('/game');
+      this.setState({ gamePage: true });
     }
 
     const { inputName, inputEmail } = this.state;
-
     dispatch(savePlayerInfo({ inputName, inputEmail }));
-    await dispatch(fetchTokenPlayer());
-    this.setState({ newPage: true });
   };
 
   render() {
-    const { inputName, inputEmail, btnDisabled, newPage } = this.state;
+    const { inputName, inputEmail, btnDisabled, loginPage, gamePage } = this.state;
     const { handleChange, handleClick } = this;
 
-    if (newPage) return <Redirect to="/game" />;
+    if (loginPage) return <Redirect to="/" />;
+    if (gamePage) return <Redirect to="/game" />;
 
     return (
       <main className="login-container">
