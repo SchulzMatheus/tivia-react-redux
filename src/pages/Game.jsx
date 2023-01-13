@@ -13,12 +13,18 @@ const WRONG_ANSWER = 'wrong-answer';
 class Game extends Component {
   state = {
     questions: [],
+    randomQuestions: [],
     isLoading: true,
     currentQuestion: 0,
+    timeLeft: 30,
+    btnDisabled: false,
   };
 
   async componentDidMount() {
     const { history } = this.props;
+
+    this.handleTimer();
+
     const token = localStorage.getItem('token');
     if (!token) {
       history.push('/');
@@ -30,9 +36,33 @@ class Game extends Component {
       this.setState({
         questions: questionsObj.results,
         isLoading: false,
-      });
+      }, this.handleQuestions);
     }
   }
+
+  handleTimer = () => {
+    const second = 1000;
+
+    this.timer = setInterval(() => {
+      this.setState((prevState) => ({ timeLeft: prevState.timeLeft - 1 }));
+
+      const { timeLeft } = this.state;
+      if (timeLeft === 1) {
+        clearInterval(this.timer);
+        this.setState({ btnDisabled: true });
+      }
+    }, second);
+  };
+
+  handleQuestions = () => {
+    const { questions, currentQuestion } = this.state;
+    this.setState({
+      randomQuestions: this.handleRandom(
+        questions[currentQuestion]?.correct_answer,
+        questions[currentQuestion]?.incorrect_answers,
+      ),
+    });
+  };
 
   handleRandom = (correctAnswer, incorrectAnswers) => {
     const newAnswers = [...incorrectAnswers, correctAnswer];
@@ -56,9 +86,8 @@ class Game extends Component {
   };
 
   render() {
-    const {
-      questions, isLoading, currentQuestion,
-    } = this.state;
+    const { questions, randomQuestions, isLoading,
+      currentQuestion, timeLeft, btnDisabled } = this.state;
 
     return (
       <section>
@@ -75,33 +104,35 @@ class Game extends Component {
                   { questions[currentQuestion]?.question }
                 </h3>
                 <div id="answer-options" data-testid="answer-options">
-                  { this.handleRandom(
-                    questions[currentQuestion]?.correct_answer,
-                    questions[currentQuestion]?.incorrect_answers,
-                  )
-                    .map((a, answerIndex) => (
-                      <button
-                        key={ answerIndex }
-                        type="button"
-                        id={
-                          a === questions[currentQuestion]?.correct_answer
-                            ? CORRECT_ANSWER
-                            : `${WRONG_ANSWER}-${answerIndex}`
-                        }
-                        onClick={ this.handleResult }
-                        data-testid={
-                          a === questions[currentQuestion]?.correct_answer
-                            ? CORRECT_ANSWER
-                            : `${WRONG_ANSWER}-${answerIndex}`
-                        }
-                      >
-                        { a }
-                      </button>
-                    ))}
+                  { randomQuestions.map((a, answerIndex) => (
+                    <button
+                      key={ answerIndex }
+                      type="button"
+                      disabled={ btnDisabled }
+                      id={
+                        a === questions[currentQuestion]?.correct_answer
+                          ? CORRECT_ANSWER
+                          : `${WRONG_ANSWER}-${answerIndex}`
+                      }
+                      onClick={ this.handleResult }
+                      data-testid={
+                        a === questions[currentQuestion]?.correct_answer
+                          ? CORRECT_ANSWER
+                          : `${WRONG_ANSWER}-${answerIndex}`
+                      }
+                    >
+                      { a }
+                    </button>
+                  ))}
                 </div>
               </main>
             </div>
           )}
+        <p>
+          Timer:
+          {' '}
+          <span>{ timeLeft }</span>
+        </p>
       </section>
     );
   }

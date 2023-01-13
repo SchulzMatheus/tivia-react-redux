@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
-import { savePlayerInfo } from '../redux/actions';
+import savePlayerInfo from '../redux/actions';
 import '../styles/login.css';
 
 import getToken from '../services/TriviaAPI/requestToken';
@@ -110,8 +110,4 @@ Login.propTypes = {
   history: PropTypes.func,
 }.isRequired;
 
-const mapStateToProps = (state) => ({
-  token: state.player.token,
-});
-
-export default connect(mapStateToProps)(Login);
+export default connect()(Login);

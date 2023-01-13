@@ -6,7 +6,7 @@ import '../styles/header.css';
 
 class Header extends Component {
   render() {
-    const { player: { name, gravatarEmail, score } } = this.props;
+    const { name, gravatarEmail, score } = this.props;
     const hash = md5(gravatarEmail).toString();
     const picture = `https://www.gravatar.com/avatar/${hash}`;
 
