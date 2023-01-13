@@ -9,6 +9,7 @@ import '../styles/game.css';
 
 const CORRECT_ANSWER = 'correct-answer';
 const WRONG_ANSWER = 'wrong-answer';
+const MAX_QUESTIONS_LENGTH = 4;
 
 class Game extends Component {
   state = {
@@ -18,6 +19,7 @@ class Game extends Component {
     currentQuestion: 0,
     timeLeft: 30,
     btnDisabled: false,
+    next: false,
   };
 
   async componentDidMount() {
@@ -83,11 +85,38 @@ class Game extends Component {
         option.className = 'wrong';
       }
     });
+
+    this.setState({
+      next: true,
+    });
+
+    clearInterval(this.timer);
+  };
+
+  handleNextQuestion = () => {
+    this.setState((prevState) => ({
+      currentQuestion: prevState.currentQuestion + 1,
+    }), () => this.handleQuestions());
+
+    const allOptions = document.getElementById('answer-options');
+    const options = allOptions.childNodes;
+    options.forEach((option) => {
+      option.className = '';
+    });
+
+    this.setState({
+      timeLeft: 30,
+    }, () => this.handleTimer());
+  };
+
+  gotToFeedback = () => {
+    const { history } = this.props;
+    history.push('/feedback');
   };
 
   render() {
     const { questions, randomQuestions, isLoading,
-      currentQuestion, timeLeft, btnDisabled } = this.state;
+      currentQuestion, timeLeft, btnDisabled, next } = this.state;
 
     return (
       <section>
@@ -133,6 +162,16 @@ class Game extends Component {
           {' '}
           <span>{ timeLeft }</span>
         </p>
+        { next && (
+          <button
+            type="button"
+            onClick={ currentQuestion === MAX_QUESTIONS_LENGTH
+              ? this.gotToFeedback : this.handleNextQuestion }
+            data-testid="btn-next"
+          >
+            Next
+          </button>
+        ) }
       </section>
     );
   }
