@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
 import Header from '../components/Header';
 import getQuestions from '../services/TriviaAPI/requestQuestions';
-
+import { sumScore } from '../redux/actions';
 import '../styles/game.css';
 
 const CORRECT_ANSWER = 'correct-answer';
@@ -74,7 +73,33 @@ class Game extends Component {
     return randonAnswers;
   };
 
-  handleResult = () => {
+  handleResult = ({ target }) => {
+    const { id } = target;
+    const { dispatch } = this.props;
+    const { questions, currentQuestion, timeLeft } = this.state;
+    const currentDiffiiculty = questions[currentQuestion].difficulty;
+
+    let mod = 0;
+
+    console.log(currentDiffiiculty);
+
+    if (currentDiffiiculty === 'easy') {
+      mod = 1;
+    } else if (currentDiffiiculty === 'medium') {
+      mod = 2;
+    } else {
+      // eslint-disable-next-line no-magic-numbers
+      mod = 3;
+    }
+
+    console.log(mod);
+
+    if (id === 'correct-answer') {
+      // eslint-disable-next-line no-magic-numbers
+      const score = 10 + (timeLeft * mod);
+      dispatch(sumScore(score));
+    }
+
     const allOptions = document.getElementById('answer-options');
     const options = allOptions.childNodes;
 
