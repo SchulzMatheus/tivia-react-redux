@@ -79,24 +79,25 @@ class Game extends Component {
     const { questions, currentQuestion, timeLeft } = this.state;
     const currentDiffiiculty = questions[currentQuestion].difficulty;
 
+    const easy = 1;
+    const medium = 2;
+    const hard = 3;
+    const ten = 10;
+
     let mod = 0;
 
-    console.log(currentDiffiiculty);
-
     if (currentDiffiiculty === 'easy') {
-      mod = 1;
+      mod = easy;
     } else if (currentDiffiiculty === 'medium') {
-      mod = 2;
+      mod = medium;
     } else {
-      // eslint-disable-next-line no-magic-numbers
-      mod = 3;
+      mod = hard;
     }
 
     console.log(mod);
 
     if (id === 'correct-answer') {
-      // eslint-disable-next-line no-magic-numbers
-      const score = 10 + (timeLeft * mod);
+      const score = ten + (timeLeft * mod);
       dispatch(sumScore(score));
     }
 
