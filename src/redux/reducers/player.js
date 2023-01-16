@@ -1,4 +1,4 @@
-import SAVE_PLAYER_INFO from '../actions/actionTypes';
+import { SAVE_PLAYER_INFO, SCORE } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
   name: '',
@@ -15,6 +15,12 @@ const player = (state = INITIAL_STATE, action) => {
       name: action.payload.inputName,
       gravatarEmail: action.payload.inputEmail,
     };
+  case SCORE: {
+    return {
+      ...state,
+      score: state.score + action.payload,
+    };
+  }
   default:
     return state;
   }

@@ -1,8 +1,11 @@
-import SAVE_PLAYER_INFO from './actionTypes';
+import { SAVE_PLAYER_INFO, SCORE } from './actionTypes';
 
-const savePlayerInfo = (playerInfo) => ({
+export const savePlayerInfo = (playerInfo) => ({
   type: SAVE_PLAYER_INFO,
   payload: playerInfo,
 });
 
-export default savePlayerInfo;
+export const sumScore = (score) => ({
+  type: SCORE,
+  payload: score,
+});

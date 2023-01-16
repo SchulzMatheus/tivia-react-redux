@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import md5 from 'crypto-js/md5';
 import '../styles/header.css';
+// import userEvent from '@testing-library/user-event';
+// import player from '../redux/reducers/player';
 
 class Header extends Component {
   render() {
-    const { name, gravatarEmail, score } = this.props;
+    const { player: { name, gravatarEmail, score } } = this.props;
     const hash = md5(gravatarEmail).toString();
     const picture = `https://www.gravatar.com/avatar/${hash}`;
 
